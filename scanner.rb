@@ -6,6 +6,11 @@
 	require g
 }
 
+def textStrip(tag)
+	return tag.text.strip
+end
+
+
 agent=					Mechanize.new
 agent.user_agent_alias=	"Linux Firefox"
 
@@ -16,17 +21,21 @@ letterArray.insert(0,'9')
 letterArray.each{|ltr|
 	pgNum=	0
 	loop{  
-		albumDirectoryURL=	baseURL+"/browse/albums/artist/"+ltr+"?page="+pgNum.to_s
+		albumDirectoryURL=	baseURL+"/browse/albums/release-date/available/date?page="+pgNum.to_s
 		p "OPENING #{albumDirectoryURL}"
+
 		albumDirectoryPage=	agent.get(albumDirectoryURL)
 		listProducts=		albumDirectoryPage.css(".list_products")	# `ol` containing `li` elements containing links to album pages
 		if listProducts.length==0
-			pgNum=	0
 			break
 		end
+
 		listProducts.css('a').each{|a|
 			albumURL=	baseURL+a["href"]
-			albumPage=	agent.get(albumPage)
+			p "OPENING #{albumURL}"
+			albumPage=	agent.get(albumURL)
+			album=		textStrip(albumPage.css(".product_title")[0])
+			p "=="
 		}
 		p "========"
 		pgNum+=1
