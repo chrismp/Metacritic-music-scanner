@@ -15,10 +15,39 @@ def textStrip(tag)
 	return tag.text.strip
 end
 
+csvInfoHash= {
+	"Albums" => [
+		"AlbumURL",
+		"Album",
+		"ArtistURL",
+		"Label",
+		"LabelURL",
+		"Summary",
+		"Metascore",
+		"CriticScores",
+		"UserScore",
+		"UserScores"
+	],
+	"Artists" => [
+		"Artist",
+		"URL"
+	],
+	"CriticReviews" => [
+		"Critic",
+		"AlbumURL",
+		"Score"
+	],
+	"Genres" => [
+		"Genre",
+		"AlbumURL"
+	]
+}
+
+CSV.open("artists.csv",'w',:write_headers=>true,:headers=>artistsHeaders)
+
 
 agent=					Mechanize.new
 agent.user_agent_alias=	"Linux Firefox"
-
 
 baseURL=		"http://www.metacritic.com"
 letterArray=	('a'..'z').map{|x| x}
