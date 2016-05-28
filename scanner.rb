@@ -12,6 +12,9 @@ def openURL(agent,url)
 		agent.get(url)
 	rescue Exception => e
 		p "ERROR: #{e}"
+		if e.to_s.include?"404"
+			return 404			
+		end
 		sleep 60
 		retry
 	end
@@ -78,6 +81,8 @@ loop{
 
 	listProducts.css('a').each{|a|
 		albumURL=	baseURL+a["href"]
+		next if openURL(agent,albumURL)===404
+
 		albumPage=	openURL(agent,albumURL)
 		album=		textStrip(albumPage.css(".product_title")[0])
 		artist=		textStrip(albumPage.css(".product_artist a")[0])
@@ -126,6 +131,7 @@ loop{
 		p album,artist,artistHref,label,labelHref,summary,metascore,criticScores,userScore,userScores,"=="
 
 		criticsURL=	albumURL+"/critic-reviews"
+		next if openURL(agent,criticsURL)===404
 		criticsPage=openURL(agent,criticsURL)
 		criticsPage.css(".critic_review").each{|reviewTag|
 			critic=		textStrip(reviewTag.css(".source")[0])
