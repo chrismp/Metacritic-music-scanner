@@ -8,6 +8,13 @@
 
 def openURL(agent,url)
 	p "OPENING #{url}"
+	begin
+		agent.get(url)
+	rescue Exception => e
+		p "ERROR: #{e}"
+		sleep 60
+		retry
+	end
 	return agent.get(url)
 end
 
