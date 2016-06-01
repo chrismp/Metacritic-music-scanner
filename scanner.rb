@@ -70,13 +70,13 @@ agent=					Mechanize.new
 agent.user_agent_alias=	"Linux Firefox"
 
 baseURL=		"http://www.metacritic.com"
-pgNum=			0
-loop{  
+pgNum=			ARGV[0].to_i
+# loop{  
 	albumDirectoryURL=	baseURL+"/browse/albums/release-date/available/date?page="+pgNum.to_s
 	albumDirectoryPage=	openURL(agent,albumDirectoryURL)
 	listProducts=		albumDirectoryPage.css(".list_products")	# `ol` containing `li` elements containing links to album pages
 	if listProducts.length==0
-		break
+		abort
 	end
 
 	listProducts.css('a').each{|a|
@@ -151,5 +151,4 @@ loop{
 	}
 	p "========"
 	pgNum+=1
-}
 # }
