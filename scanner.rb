@@ -9,7 +9,7 @@
 def openURL(agent,url)
 	p "OPENING #{url}"
 	begin
-		agent.get(url)
+		page=	agent.get(url)
 	rescue Exception => e
 		p "ERROR: #{e}"
 		if e.to_s.include?"404"
@@ -18,7 +18,7 @@ def openURL(agent,url)
 		sleep 60
 		retry
 	end
-	return agent.get(url)
+	return page
 end
 
 def textStrip(tag)
