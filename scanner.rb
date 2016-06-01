@@ -22,7 +22,7 @@ def openURL(agent,url)
 end
 
 def textStrip(tag)
-	return tag.text.strip
+	return tag===nil ? nil : tag.text.strip
 end
 
 albumsCSV=	"Albums.csv"
