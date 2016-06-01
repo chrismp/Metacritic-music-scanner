@@ -19,6 +19,6 @@ end
 
 lastPageNumberTag=		page.css(".page_num")[-1]
 lastPageString=			lastPageNumberTag.text.strip
-lastPageNumber=			lastPageString.to_i - 1			# Make sure to subtract one since he the page number in the URL is always one less than what is displayed on the page 
+lastPageNumber=			lastPageString.to_i
 
 puts lastPageNumber
