@@ -39,6 +39,7 @@ csvInfoHash= {
 		"Label",
 		"LabelURL",
 		"Summary",
+		"ReleaseDate",
 		"Metascore",
 		"CriticScores",
 		"UserScore",
@@ -100,6 +101,7 @@ loop{
 		labelHref=	albumPage.css(".publisher a")[0].attr("href")
 		summary=	textStrip(albumPage.css(".product_summary .data span"))
 		metascore=	textStrip(albumPage.css(".metascore_summary span[itemprop='ratingValue']")[0])
+		releaseDate=textStrip(albumPage.css("span[itemprop='datePublished']")[0])
 		criticScores=textStrip(albumPage.css(".metascore_summary span[itemprop='reviewCount']")[0])
 		userScore=	textStrip(albumPage.css(".userscore_wrap div.user")[0])
 		userScore=	userScore == "tbd" ? nil : userScore
@@ -117,6 +119,7 @@ loop{
 				label,
 				labelHref,
 				summary,
+				releaseDate,
 				metascore,
 				criticScores,
 				userScore,
