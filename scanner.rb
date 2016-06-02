@@ -28,7 +28,7 @@ def openURL(agent,url)
 			return false			
 		end
 
-		sleep 60
+		sleep 30
 		retryCount+=1
 		retry
 	end
@@ -112,7 +112,7 @@ loop{
 		artist=		textStrip(albumPage.css(".product_artist a")[0])
 		artistHref=	albumPage.css(".product_artist a")[0].attr("href")
 		label=		textStrip(albumPage.css(".product_company .data")[0])
-		labelHref=	albumPage.css(".publisher a")[0].attr("href")
+		labelHref=	albumPage.css(".publisher a")[0]===nil ? nil : albumPage.css(".publisher a")[0].attr("href")
 		summary=	textStrip(albumPage.css(".product_summary .data span"))
 		metascore=	textStrip(albumPage.css(".metascore_summary span[itemprop='ratingValue']")[0])
 		releaseDate=textStrip(albumPage.css("span[itemprop='datePublished']")[0])
