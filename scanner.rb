@@ -71,15 +71,25 @@ agent.user_agent_alias=	"Linux Firefox"
 
 baseURL=		"http://www.metacritic.com"
 pgNum=			ARGV[0].to_i
-# loop{  
+loop{  
 	albumDirectoryURL=	baseURL+"/browse/albums/release-date/available/date?page="+pgNum.to_s
 	albumDirectoryPage=	openURL(agent,albumDirectoryURL)
 	listProducts=		albumDirectoryPage.css(".list_products")	# `ol` containing `li` elements containing links to album pages
 	if listProducts.length==0
-		abort
+		break
 	end
 
 	listProducts.css('a').each{|a|
+		albumExists=	false
+		File.foreach(albumsCSV){|line|
+			albumHref=		line.split(',')[0]
+			if albumHref===a["href"]
+				albumExists=	true
+				break
+			end
+		}
+		next if albumExists===true
+
 		albumURL=	baseURL+a["href"]
 		next if openURL(agent,albumURL)===404
 
@@ -151,4 +161,4 @@ pgNum=			ARGV[0].to_i
 	}
 	p "========"
 	pgNum+=1
-# }
+}
