@@ -8,14 +8,28 @@
 
 def openURL(agent,url)
 	p "OPENING #{url}"
+
+	retryCount=	0
 	begin
 		page=	agent.get(url)
 	rescue Exception => e
-		p "ERROR: #{e}"
-		if e.to_s.include?"404"
-			return 404			
+		if e.to_s.include?"429" or e.to_s.include?"503"
+			sleep 30
+			retry
 		end
+
+		if retryCount > 10
+			return false
+		end
+
+		p "ERROR: #{e}"
+
+		if e.to_s.include?"404"
+			return false			
+		end
+
 		sleep 60
+		retryCount+=1
 		retry
 	end
 	return page
@@ -91,7 +105,7 @@ loop{
 		next if albumExists===true
 
 		albumURL=	baseURL+albumHref
-		next if openURL(agent,albumURL)===404
+		next if openURL(agent,albumURL)===false
 
 		albumPage=	openURL(agent,albumURL)
 		album=		textStrip(albumPage.css(".product_title")[0])
@@ -160,3 +174,4 @@ loop{
 	p "========"
 	pgNum+=1
 }
+p "FINISHED"
