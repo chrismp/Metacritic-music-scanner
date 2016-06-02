@@ -25,6 +25,7 @@ def textStrip(tag)
 	return tag===nil ? nil : tag.text.strip
 end
 
+
 albumsCSV=	"Albums.csv"
 artistsCSV=	"Artists.csv"
 criticsCSV=	"CriticReviews.csv"
@@ -33,6 +34,7 @@ csvInfoHash= {
 	albumsCSV => [
 		"AlbumURL",
 		"Album",
+		"Artist",
 		"ArtistURL",
 		"Label",
 		"LabelURL",
@@ -41,10 +43,6 @@ csvInfoHash= {
 		"CriticScores",
 		"UserScore",
 		"UserScores"
-	],
-	artistsCSV => [
-		"Artist",
-		"URL"
 	],
 	criticsCSV => [
 		"Critic",
@@ -62,7 +60,7 @@ csvInfoHash.each{|fileName,headersArray|
 	if File.exist?(fileName)!=true
 		CSV.open(fileName,'w') do |csv|
 			csv << headersArray
-		end		
+		end
 	end
 }
 
@@ -80,17 +78,18 @@ loop{
 	end
 
 	listProducts.css('a').each{|a|
+		albumHref=	a["href"]
+
 		albumExists=	false
-		File.foreach(albumsCSV){|line|
-			albumHref=		line.split(',')[0]
-			if albumHref===a["href"]
+		File.foreach(albumsCSV){|line|	
+			if line.split(',')[0] === albumHref
 				albumExists=	true
 				break
 			end
 		}
 		next if albumExists===true
 
-		albumURL=	baseURL+a["href"]
+		albumURL=	baseURL+albumHref
 		next if openURL(agent,albumURL)===404
 
 		albumPage=	openURL(agent,albumURL)
@@ -111,8 +110,9 @@ loop{
 
 		CSV.open(albumsCSV,'a') do |csv|
 			csv << [
-				a["href"],
+				albumHref,
 				album,
+				artist,
 				artistHref,
 				label,
 				labelHref,
@@ -123,21 +123,16 @@ loop{
 				userScores
 			]
 		end
-		CSV.open(artistsCSV,'a') do |csv|
-			csv << [
-				artist,
-				artistHref
-			]
-		end
+
 		albumPage.css(".product_genre .data").each{|genre|
 			CSV.open(genresCSV,'a') do |csv|
 				csv << [
 					genre,
-					a["href"]
+					albumHref
 				]
 			end
 		}
-		
+
 		p album,artist,artistHref,label,labelHref,summary,metascore,criticScores,userScore,userScores,"=="
 
 		criticsURL=	albumURL+"/critic-reviews"
@@ -150,7 +145,7 @@ loop{
 			CSV.open(criticsCSV,'a') do |csv|
 				csv << [
 					critic,
-					a["href"],
+					albumHref,
 					reviewDate,
 					criticScore
 				]
