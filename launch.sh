@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rm -rf *.csv
+rm -rf Logs/*.log
 
 LOGS_DIR=Logs
 mkdir -p $LOGS_DIR
